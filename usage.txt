@@ -1,0 +1,57 @@
+MrmMngr v1.3 - RM-TEAM 06/2022
+
+Utility to manage MRM images.
+Usage:
+  mrmmngr imgname.mrm -c [fmask[.T]]
+  mrmmngr imgname.mrm -ic [-is num] [-id num] [-ib [path/]bootfile.ext]
+  mrmmngr imgname.mrm -ir [-is num] [-id num] [-ib [path/]bootfile.ext]
+  mrmmngr imgname.mrm -ii
+  mrmmngr imgname.mrm -fa [path/]filename.ext [-fn fname.T] [-ln lname] [-sa num] [-al] [-ar] [-ow] [-psc]
+  mrmmngr imgname.mrm -fc [path/]complex-file-name [-ow]
+  mrmmngr imgname.mrm -fl [path/]complex-file-names-list [-ow]
+  mrmmngr imgname.mrm -fr fname.T [path/]filename.ext
+  mrmmngr imgname.mrm -fp fname.T [-fn newfn.T] [-ln lname] [-sa num] [-al] [-ar]
+  mrmmngr imgname.mrm -fd fmask[.T]
+  mrmmngr imgname.mrm -fx [path/]fmask[.T] [-cfn [-cfnl [path/]complex-file-names-list]]
+  mrmmngr imgname.mrm -ml fname.T pname.T cname.T [-ln lname] [-sa num] [-mon MX] [-scs] [-ow]
+  mrmmngr imgname.mrm -li fname.T
+
+    -c    show catalogue of the MRM image
+    -ic   create new MRM image
+    -ir   reconfigure MRM image
+    -ii   show image info
+    -is   image size in kB [512]
+    -id   number of directory items [32]
+    -ib   use this MRM Booter file [mrm-boot.bin]
+    -fa   add file into image
+    -fc   add file into image by complex source file name
+    -fl   add files into image by list of files in text file
+    -fr   replace file in image
+    -fp   change file parameters in image
+    -fd   delete file(s) from image
+    -fx   extract file(s) from image
+    -cfn  create complex file names for extracted files
+    -cfnl create also text file with list of complex file names of extracted files
+    -ml   make loader file
+    -li   show loader file info
+    -fn   file name (max. 8 chars + one char type)
+    -ln   long name to display (max. 16 chars)
+    -sa   start address to load [0]
+    -al   set/toggle List attribute
+    -ar   set/toggle AllRAM attribute
+    -ow   overwrite already existing file
+    -psc  insert PSC unpak routine before picture data
+    -mon  monitor type in Loader; can be 1, 1X, 2 or 2X or mname.T
+    -scs  suppress clear screen in Loader
+
+`lname` must be in double quotes when contains spaces.
+`fname.T`, `newfn.T`, `pname.T`, `cname.T` and `mname.T` are MRM 8.1 file names
+and must be in double quotes when contains spaces or >/< redir chars.
+`fmask[.T]` is MRM 8.1 file name that may contain wildcards.
+`T` must be single character. If not used in mask, all file types regard.
+`complex-file-name` has form `fname_lname_sa_attr.T` (special chars as #HH)
+`complex-file-names-list` is text file with complex file names to add
+All numeric parameters must be nonnegative integers and can be in three forms:
+  decimal (e.g. 12345)
+  octal (e.g. 01234)
+  hexadecimal (e.g. 0x1234)
