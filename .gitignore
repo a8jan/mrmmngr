@@ -1,0 +1,23 @@
+# object files
+*.o
+*.obj
+
+# Windows build
+*.exe
+# final executable (Linux build)
+/mrmmngr
+
+# editor backups and swap files
+*~
+*.swp
+*.bak
+*.orig
+*.rej
+
+# debugging leftovers
+core
+vgcore.*
+
+# IDE / local settings
+.vscode/
+.claude/settings.local.json

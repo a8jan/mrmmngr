@@ -25,6 +25,10 @@
   #define stricmp               strcasecmp
   #define strupr(x)             char* uptr = x; while ((*uptr = toupper(*uptr))) uptr++;
 
+  #ifndef MRM_DATA_DIR
+    #define MRM_DATA_DIR        "/usr/local/share/mrmmngr"
+  #endif
+
   #pragma GCC diagnostic ignored "-Warray-bounds"
 #endif
 
@@ -110,9 +114,8 @@ typedef struct DirItem {
 } DIR_ITEM;
 #pragma pack(pop)
 
-#if (sizeof(DIR_ITEM) != 32)
-  #error "sizeof(DIR_ITEM) != 32 !!!"
-#endif
+// sizeof(DIR_ITEM) != 32 !!! (zaporna velkost pola = chyba pri preklade)
+typedef char DIR_ITEM_SIZE_CHECK[(sizeof(DIR_ITEM) == 32) ? 1 : -1];
 
 //---------------------------------------------------------------------------
 typedef struct tagDataFile {

@@ -5,6 +5,9 @@
 #include <ctype.h>
 
 #include "common.h"
+#if LINUX
+  #include <unistd.h>
+#endif
 
 //---------------------------------------------------------------------------
 int processArguments(int argc, char* argv[], WORK_PARAMS **ppWP);
@@ -573,6 +576,23 @@ int processArguments(int argc, char* argv[], WORK_PARAMS **ppWP)
 
     if (*pWP->szFnBoot == '\0') {
       // standardna cesta k MRM BOOT suboru
+#if LINUX
+      // pri spustitelnom subore, inak v MRM_DATA_DIR
+      p = NULL;
+      iV = (int) readlink("/proc/self/exe", pWP->szFnBoot,
+                          sizeof(pWP->szFnBoot) - sizeof(MRM_BOOT_FILE));
+      if (iV > 0) {
+        pWP->szFnBoot[iV] = '\0';
+        p = strrchr(pWP->szFnBoot, '/');
+      }
+      if (p) {
+        strcpy(p + 1, MRM_BOOT_FILE);
+        if (access(pWP->szFnBoot, R_OK) != 0)
+          p = NULL;
+      }
+      if (p == NULL)
+        strcpy(pWP->szFnBoot, MRM_DATA_DIR "/" MRM_BOOT_FILE);
+#else
       p = strrchr(argv[0], '/');
 #if WIN
       if (p == NULL)
@@ -584,6 +604,7 @@ int processArguments(int argc, char* argv[], WORK_PARAMS **ppWP)
         pWP->szFnBoot[iV] = '\0';
       }
       strcat(pWP->szFnBoot, MRM_BOOT_FILE);
+#endif
     }
 
     if (pWP->bCreateMrm || pWP->bReconfigureMrm) {

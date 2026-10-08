@@ -5,13 +5,25 @@
 #include <ctype.h>
 
 #include "common.h"
+#if LINUX
+  #include <unistd.h>
+#endif
 
 //---------------------------------------------------------------------------
 void pressEnter(void)
 {
+  int cc;
+
+#if LINUX
+  // v skripte alebo pri presmerovani necakaj
+  if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+    return;
+#endif
+
   printf("\nPress ENTER ...\n");
-  while (getchar() != '\n')
-    ;
+  do {
+    cc = getchar();
+  } while (cc != '\n' && cc != EOF);
 }
 //---------------------------------------------------------------------------
 int printError(int iErr, void *pvPar1, void *pvPar2)

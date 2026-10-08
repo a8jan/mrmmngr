@@ -3,8 +3,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include "common.h"
+#if LINUX
+  #include <unistd.h>
+#endif
 /*
 #if WIN
   #include <dir.h>
@@ -440,6 +444,8 @@ int addFile(WORK_PARAMS *pWP)
   #endif
     if (p)
       *++p = '\0';
+    else
+      *szFn = '\0';
     strcat(szFn, MRM_UNPACK_FILE);
 
     // nacitaj Unpacker do buffra
@@ -871,8 +877,10 @@ int makeLoader(WORK_PARAMS *pWP)
 #endif
   if (p)
     *++p = '\0';
-  else
+  else {
     p = szFn;
+    *p = '\0';
+  }
   strcat(szFn, MRM_LOADER_FILE);
 
   // nacitaj Loader do buffra
@@ -921,11 +929,30 @@ int makeLoader(WORK_PARAMS *pWP)
   }
 
   // uloz pripraveny Loader do docasneho suboru
+#if WIN
   *p = '\0';
   tmpnam(p); // vytvor unikatne docasne meno
+#else
+  {
+    // tmpnam() vracia v Linuxe absolutnu cestu,
+    // pouzi mkstemp() v $TMPDIR alebo /tmp
+    const char *pszTmpDir = getenv("TMPDIR");
+    int fd;
+
+    if (pszTmpDir == NULL || *pszTmpDir == '\0')
+      pszTmpDir = "/tmp";
+    snprintf(szFn, sizeof(szFn), "%s/mrmldrXXXXXX", pszTmpDir);
+    fd = mkstemp(szFn); // vytvor unikatny docasny subor
+    if (fd < 0)
+      return printError(ERR_OPEN_DEST_FILE, szFn, NULL);
+    close(fd);
+  }
+#endif
   iErr = saveFile(szFn, pWP->pbtBuff, iLdrLen, FALSE);
-  if (iErr != ERR_OK)
+  if (iErr != ERR_OK) {
+    remove(szFn);
     return iErr;
+  }
 
   // pridaj subor Loadera do obrazu
   strcpy(pWP->szFilePath, szFn);  // meno zdrojoveho suboru je docasny subor s Loaderom
