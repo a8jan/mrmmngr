@@ -43,7 +43,7 @@ int prepareFilePathEx(WORK_PARAMS *pWP, char *pszDestFileName, const char *pszFi
     if (bOptAdd)
       strcpy(pszDestFileName, pszFilePath);
     else {
-      i = p - pszFilePath + 1;
+      i = (int) (p - pszFilePath) + 1;
       strncpy(pszDestFileName, pszFilePath, i);
       pszDestFileName[i] = '\0';
     }
@@ -55,9 +55,9 @@ int prepareFilePathEx(WORK_PARAMS *pWP, char *pszDestFileName, const char *pszFi
   p = szName;
   q = strchr(p, '.');
   if (q)
-    i = q - p;
+    i = (int) (q - p);
   else
-    i = strlen(p);
+    i = (int) strlen(p);
   if (i == 0 || (q && *(q + 1) == '\0'))
     return printError(ERR_INVALID_FILE_MASK, pszFilePath, pszOpt);
 
@@ -170,7 +170,7 @@ void compactFileName(DIR_ITEM *pDI, char *pszName, BOOL bComplexName)
   *(pszName + MRM_SHORT_NAME_LEN) = '\0';
   trim(pszName);
   if (pDI->cType != ' ') {
-    i = strlen(pszName);
+    i = (int) strlen(pszName);
     pszName[i++] = '.';
     pszName[i++] = pDI->cType;
     pszName[i] = '\0';
@@ -408,7 +408,7 @@ int saveFile(const char *pszFileName, BYTE *pbtBuff, int iLen, BOOL bAppend)
 //---------------------------------------------------------------------------
 int loadFile(const char *pszFileName, BYTE *pbtBuff, int iMaxLen)
 {
-  int iErr = ERR_OK, iLen;
+  int iErr = ERR_OK, iLen = 0;
   FILE *f;
 
   do {
@@ -503,7 +503,7 @@ int copyFile(const char *pszFileNameDest, const char *pszFileNameSrc)
           break;
         }
       }
-      iLen -= n;
+      iLen -= (int) n;
     }
 
   } while (FALSE);

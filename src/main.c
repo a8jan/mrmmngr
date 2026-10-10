@@ -309,7 +309,7 @@ int processArguments(int argc, char* argv[], WORK_PARAMS **ppWP)
           iErr = printError(ERR_NO_OPTION_VALUE, argv[i - 1], NULL);
           break;
         }
-        iV = strlen(argv[i]);
+        iV = (int) strlen(argv[i]);
         if (iV > MRM_LONG_NAME_LEN) {
           iErr = printError(ERR_BAD_LONG_NAME, NULL, NULL);
           break;
@@ -325,7 +325,7 @@ int processArguments(int argc, char* argv[], WORK_PARAMS **ppWP)
         else {
           pWP->iStartAdr = parseNumber(argv[i]);
           if (pWP->iStartAdr < 0 || pWP->iStartAdr > 65535) {
-            iErr = printError(ERR_BAD_ADDRESS, argv[i - 1], argv[i]);
+            iErr = printError(ERR_BAD_ADDRESS, argv[i - 1], &pWP->iStartAdr);
             break;
           }
         }
@@ -599,7 +599,7 @@ int processArguments(int argc, char* argv[], WORK_PARAMS **ppWP)
         p = strrchr(argv[0], '\\');
 #endif
       if (p) {
-        iV = p - argv[0] + 1;
+        iV = (int) (p - argv[0]) + 1;
         strncpy(pWP->szFnBoot, argv[0], iV);
         pWP->szFnBoot[iV] = '\0';
       }

@@ -26,7 +26,7 @@ void pressEnter(void)
   } while (cc != '\n' && cc != EOF);
 }
 //---------------------------------------------------------------------------
-int printError(int iErr, void *pvPar1, void *pvPar2)
+int printError(int iErr, const void *pvPar1, const void *pvPar2)
 {
   switch (iErr) {
     case ERR_OUT_OF_MEMORY :
@@ -34,59 +34,59 @@ int printError(int iErr, void *pvPar1, void *pvPar2)
       break;
 
     case ERR_UNKNOWN_OPTION :
-      fprintf(stderr, "Unknown option: %s", pvPar1);
+      fprintf(stderr, "Unknown option: %s", (const char *) pvPar1);
       break;
 
     case ERR_BAD_OPTIONS :
-      fprintf(stderr, "Bad combination of options: %s %s", pvPar1, pvPar2);
+      fprintf(stderr, "Bad combination of options: %s %s", (const char *) pvPar1, (const char *) pvPar2);
       break;
 
     case ERR_NO_OPTION_VALUE :
-      fprintf(stderr, "Missing option value(s) '%s'!", (char *) pvPar1);
+      fprintf(stderr, "Missing option value(s) '%s'!", (const char *) pvPar1);
       break;
 
     case ERR_OPEN_SRC_FILE :
-      fprintf(stderr, "Can't open file '%s' for reading!", (char *) pvPar1);
+      fprintf(stderr, "Can't open file '%s' for reading!", (const char *) pvPar1);
       break;
 
     case ERR_ACCESS_SRC_FILE :
-      fprintf(stderr, "Can't access file '%s' for reading!", (char *) pvPar1);
+      fprintf(stderr, "Can't access file '%s' for reading!", (const char *) pvPar1);
       break;
 
     case ERR_LENGTH_SRC_FILE :
-      fprintf(stderr, "Can't retrieve length of the file '%s'!", (char *) pvPar1);
+      fprintf(stderr, "Can't retrieve length of the file '%s'!", (const char *) pvPar1);
       break;
 
     case ERR_SRC_FILE_OF_READ :
-      fprintf(stderr, "Read beyond end of the file '%s'.", (char *) pvPar1);
+      fprintf(stderr, "Read beyond end of the file '%s'.", (const char *) pvPar1);
       break;
 
     case ERR_SRC_FILE_TO_LONG :
-      fprintf(stderr, "Source file '%s' is too long! Max length %d bytes.", (char *) pvPar1, *(int *) pvPar2);
+      fprintf(stderr, "Source file '%s' is too long! Max length %d bytes.", (const char *) pvPar1, *(const int *) pvPar2);
       break;
 
     case ERR_READ_SRC_FILE :
-      fprintf(stderr, "Can't read from the file '%s'!", (char *) pvPar1);
+      fprintf(stderr, "Can't read from the file '%s'!", (const char *) pvPar1);
       break;
 
     case ERR_OPEN_DEST_FILE :
-      fprintf(stderr, "Can't open file '%s' for writing!", (char *) pvPar1);
+      fprintf(stderr, "Can't open file '%s' for writing!", (const char *) pvPar1);
       break;
 
     case ERR_ACCESS_DEST_FILE :
-      fprintf(stderr, "Can't access output file '%s' for writing!", (char *) pvPar1);
+      fprintf(stderr, "Can't access output file '%s' for writing!", (const char *) pvPar1);
       break;
 
     case ERR_WRITE_DEST_FILE :
-      fprintf(stderr, "Can't write to the file '%s'!", (char *) pvPar1);
+      fprintf(stderr, "Can't write to the file '%s'!", (const char *) pvPar1);
       break;
 
     case ERR_BAD_ADDRESS :
-      fprintf(stderr, "Value %d is out of range <0, 65535>: %s", *(int *) pvPar2, (char *) pvPar1);
+      fprintf(stderr, "Value %d is out of range <0, 65535>: %s", *(const int *) pvPar2, (const char *) pvPar1);
       break;
 
     case ERR_BAD_VALUE :
-      fprintf(stderr, "Bad option value: %s %s", (char *) pvPar1, (char *) pvPar2);
+      fprintf(stderr, "Bad option value: %s %s", (const char *) pvPar1, (const char *) pvPar2);
       break;
 
     case ERR_BAD_LONG_NAME :
@@ -94,7 +94,7 @@ int printError(int iErr, void *pvPar1, void *pvPar2)
       break;
 
     case ERR_INPUT_FILE_MORE :
-      fprintf(stderr, "Only one source file can be specified! '%s' or '%s'?", (char *) pvPar1, (char *) pvPar2);
+      fprintf(stderr, "Only one source file can be specified! '%s' or '%s'?", (const char *) pvPar1, (const char *) pvPar2);
       break;
 
     case ERR_NO_OUTPUT_FILE :
@@ -102,30 +102,30 @@ int printError(int iErr, void *pvPar1, void *pvPar2)
       break;
 
     case ERR_BOOT_FILE_MORE :
-      fprintf(stderr, "Only one BOOT file can be specified! '%s' or '%s'?", (char *) pvPar1, (char *) pvPar2);
+      fprintf(stderr, "Only one BOOT file can be specified! '%s' or '%s'?", (const char *) pvPar1, (const char *) pvPar2);
       break;
 
     case ERR_INVALID_BOOT_BIN :
       if (pvPar1)
-        fprintf(stderr, "Invalid BOOT binary file! '%s'", (char *) pvPar1);
+        fprintf(stderr, "Invalid BOOT binary file! '%s'", (const char *) pvPar1);
       else
         fprintf(stderr, "Invalid BOOT in MRM image!");
       break;
 
     case ERR_INVALID_FILE_MASK :
-      fprintf(stderr, "Invalid file name/mask '%s' in option `%s`", (char *) pvPar1, (char *) pvPar2);
+      fprintf(stderr, "Invalid file name/mask '%s' in option `%s`", (const char *) pvPar1, (const char *) pvPar2);
       break;
 
     case ERR_UNAMBIGUOUS_NAME :
-      fprintf(stderr, "File name '%s' in option `%s` must be unambiguous!", (char *) pvPar1, (char *) pvPar2);
+      fprintf(stderr, "File name '%s' in option `%s` must be unambiguous!", (const char *) pvPar1, (const char *) pvPar2);
       break;
 
     case ERR_FILE_EXIST :
-      fprintf(stderr, "File '%s' alreday exist!", (char *) pvPar1);
+      fprintf(stderr, "File '%s' alreday exist!", (const char *) pvPar1);
       break;
 
     case ERR_FILE_NOT_EXIST :
-      fprintf(stderr, "File '%s' not exist!", (char *) pvPar1);
+      fprintf(stderr, "File '%s' not exist!", (const char *) pvPar1);
       break;
 
     case ERR_DIRECTORY_FULL :
@@ -141,11 +141,11 @@ int printError(int iErr, void *pvPar1, void *pvPar2)
       break;
 
     case ERR_INVALID_CPLX_NAME :
-      fprintf(stderr, "Invalid complex file name '%s'", (char *) pvPar1);
+      fprintf(stderr, "Invalid complex file name '%s'", (const char *) pvPar1);
       break;
 
     case ERR_INVALID_LOADER :
-      fprintf(stderr, "File '%s' is not valid standard Loader file!", (char *) pvPar1);
+      fprintf(stderr, "File '%s' is not valid standard Loader file!", (const char *) pvPar1);
       break;
   }
 
@@ -292,7 +292,7 @@ BOOL decodeString(char *pszDest, int iMaxDestLen, const char *pszSrc)
       else
         iVal += (cc - '0');
 
-      if (iVal < '!' && iVal > '~')
+      if (iVal < ' ' || iVal > '~')
         return FALSE;
 
       cc = (char) iVal;

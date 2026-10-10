@@ -15,7 +15,10 @@ DATAFILES=mrm-boot.bin mrm-ldr.bin unpckpsc.bin
 
 CFLAGS=-O2 -Wall -I$(SUBDIR_BASE) -DMRM_DATA_DIR='"$(DATADIR)"'
 CXXFLAGS=$(CFLAGS)
+# macOS linker: `-s` is obsolete
+ifneq ($(shell uname -s),Darwin)
 LDFLAGS=-s
+endif
 
 # object files
 OBJS=\
