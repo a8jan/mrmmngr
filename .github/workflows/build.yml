@@ -1,0 +1,84 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux (gcc)
+            os: ubuntu-latest
+            toolchain: make
+          - name: macOS (Apple clang, arm64)
+            os: macos-latest
+            toolchain: make
+          - name: Windows (MSYS2 MinGW-w64 gcc)
+            os: windows-latest
+            toolchain: msys2
+          - name: Windows (MSVC)
+            os: windows-latest
+            toolchain: msvc
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # --- Linux / macOS: system compiler + Makefile ---
+      - name: Build (make)
+        if: matrix.toolchain == 'make'
+        run: |
+          cc --version
+          make
+
+      # --- Windows: MinGW-w64 gcc from MSYS2 + Makefile ---
+      - name: Set up MSYS2
+        if: matrix.toolchain == 'msys2'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: make mingw-w64-ucrt-x86_64-gcc
+
+      - name: Build (MSYS2)
+        if: matrix.toolchain == 'msys2'
+        shell: msys2 {0}
+        run: |
+          gcc --version
+          make
+
+      # --- Windows: native MSVC, no Makefile ---
+      - name: Build (MSVC)
+        if: matrix.toolchain == 'msvc'
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSDIR=%%i"
+          call "%VSDIR%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          cl /nologo /O2 /W3 /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /Isrc src\utils.c src\file.c src\mrm.c src\main.c /Fe:mrmmngr.exe
+
+      # --- all platforms: check that the binary really works ---
+      - name: Smoke test
+        shell: bash
+        run: |
+          exe=./mrmmngr
+          [ -f mrmmngr.exe ] && exe=./mrmmngr.exe
+          set -x
+          # stdin from /dev/null so "Press ENTER" can never block
+          $exe test.mrm -ic -ib mrm-boot.bin < /dev/null
+          $exe test.mrm -ii < /dev/null
+          $exe test.mrm -fa unpckpsc.bin -fn TEST.B < /dev/null
+          $exe test.mrm -c < /dev/null | tee catalogue.txt
+          grep -q 'B TEST' catalogue.txt
+          test "$(wc -c < test.mrm)" -eq 524288
