@@ -571,7 +571,7 @@ int addFileCplx(WORK_PARAMS *pWP)
   strncpy(szName, di.cName, MRM_SHORT_NAME_LEN);
   szName[MRM_SHORT_NAME_LEN] = '\0';
   trim(szName);
-  i = strlen(szName);
+  i = (int) strlen(szName);
   szName[i++] = '.';
   szName[i++] = di.cType;
   szName[i] = '\0';
@@ -824,7 +824,7 @@ int extractFiles(WORK_PARAMS *pWP)
     memset(szFn, 0, 256);
     strcpy(szFn, pWP->szFilePath);
     strcat(szFn, szName);
-    i = strlen(szFn);
+    i = (int) strlen(szFn);
     if (isMetaChar(szFn[i - 1], FALSE)) {
       szFn[i - 1] = '\0';
       strcat(szFn, "bin");

@@ -189,7 +189,7 @@ typedef struct WorkParams {
 //---------------------------------------------------------------------------
 // utils.c
 void pressEnter(void);
-int printError(int iErr, void *pvPar, void *pvPar2);
+int printError(int iErr, const void *pvPar1, const void *pvPar2);
 int allocBuffer(void **ppvBuff, int iSize);
 int parseNumber(const char *pszStr);
 char* trimLeft(char *pStr);
