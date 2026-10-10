@@ -2,6 +2,7 @@ name: Build
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -59,18 +60,13 @@ jobs:
           make
 
       # --- Windows: native MSVC, no Makefile ---
-      - name: Set up MSVC
-        if: matrix.toolchain == 'msvc'
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: Build (MSVC)
         if: matrix.toolchain == 'msvc'
         shell: cmd
-        run: >
-          cl /nologo /O2 /W3
-          /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS
-          /Isrc src\utils.c src\file.c src\mrm.c src\main.c
-          /Fe:mrmmngr.exe
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSDIR=%%i"
+          call "%VSDIR%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          cl /nologo /O2 /W3 /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /Isrc src\utils.c src\file.c src\mrm.c src\main.c /Fe:mrmmngr.exe
 
       # --- all platforms: check that the binary really works ---
       - name: Smoke test
