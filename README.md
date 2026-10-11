@@ -6,7 +6,10 @@ MRM Manager (`mrmmngr`) is a console utility for managing MRM images: files
 that are burned into the EPROM/FLASH memory of the
 [ROM MEGAmodule](https://pmd85.borik.net/wiki/ROM_MEGAmodul) for the PMD 85
 family of computers. An image holds the boot code, a directory and the stored
-files.
+files. PMD 85 emulators with ROM MEGAmodule support, such as
+[PMD 85 Emulator](https://pmd85.borik.net/wiki/Emulator) and
+[GPMD85Emulator](https://github.com/mborik/GPMD85emulator), can load the image
+file directly, which is a convenient way to load programs or games.
 
 The utility was written by Roman Bórik (RM-TEAM). Its home page, with the
 original documentation (in Slovak) and downloads, is
