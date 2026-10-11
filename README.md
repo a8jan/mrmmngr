@@ -84,8 +84,10 @@ list of options. A short example:
 # create a new 512 kB image
 mrmmngr game.mrm -ic
 
-# add a file as GAME.B with a long name, then show the catalogue
-mrmmngr game.mrm -fa game.bin -fn GAME.B -ln "My Game"
+# add a program as GAME.? with a long name, then show the catalogue;
+# type "?" is the convention for monitor (MGLD) files, such as binaries
+# produced by z88dk, and -al lists the program in the boot menu
+mrmmngr game.mrm -fa game.bin -fn "GAME.?" -ln "My Game" -al
 mrmmngr game.mrm -c
 
 # show image info, extract all files
